@@ -1,12 +1,14 @@
 # vim-halo
 
-Make the current line blink in a given interval using timers. Idea stolen from
-@[justinmk](https://github.com/justinmk).
+Make the current line blink in a given interval using timers. The cursor won't
+block.
 
 This could be used to visually highlight the cursor after jumping to a tag and
 similar situations. Be creative!
 
 _Works with Neovim and Vim with the `+timers` feature compiled in._
+
+Idea stolen from @[justinmk](https://github.com/justinmk).
 
 ## To be done
 
