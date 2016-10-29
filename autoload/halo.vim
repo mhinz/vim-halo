@@ -5,8 +5,7 @@ highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 
 let s:config = {
       \ 'hlgroup':   'Halo',
-      \ 'repeat':    3,
-      \ 'intervals': [200]
+      \ 'intervals': [100, 100, 100, 100, 100]
       \ }
 
 " halo#run() {{{1
@@ -16,9 +15,7 @@ function! halo#run(...) abort
   if !(len(s:runconfig.intervals) % 2)
     call remove(s:runconfig.intervals, 0)
   endif
-  for _ in range(s:runconfig.repeat)
-    call s:show()
-  endfor
+  call s:show()
 endfunction
 
 " s:show() {{{1
