@@ -1,3 +1,8 @@
+if !has('timers')
+  echomsg "This Vim doesn't support timers."
+  finish
+endif
+
 " Configuration {{{1
 highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 autocmd ColorScheme *
