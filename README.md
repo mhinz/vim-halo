@@ -3,7 +3,10 @@
 Make the current line blink in a given interval using timers. Idea stolen from
 @[justinmk](https://github.com/justinmk).
 
-Works with Neovim and Vim with the `+timers` feature compiled in.
+This could be used to visually highlight the cursor after jumping to a tag and
+similar situations. Be creative!
+
+_Works with Neovim and Vim with the `+timers` feature compiled in._
 
 ## To be done
 
