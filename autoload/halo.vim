@@ -1,5 +1,3 @@
-let s:halo_id = -1
-
 " Configuration {{{1
 highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 
