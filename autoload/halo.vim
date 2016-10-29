@@ -27,14 +27,14 @@ function! s:process_config(userconfig) abort
 endfunction
 
 " s:show() {{{1
-function! s:show() abort
+function! s:show(_) abort
   let s:halo_id = matchaddpos(s:runconfig.hlgroup, [line('.')])
   let hide_in_msecs = remove(s:runconfig.intervals, 0)
   return timer_start(hide_in_msecs, function('s:hide'))
 endfunction
 
 " s:hide() {{{1
-function! s:hide() abort
+function! s:hide(_) abort
   silent! call matchdelete(s:halo_id)
   if empty(s:runconfig.intervals)
     return
@@ -49,7 +49,7 @@ function! halo#run(...) abort
   if a:0
     call s:process_config(a:1)
   endif
-  call s:show()
+  call s:show(0)
 endfunction
 
 " vim: fdm=marker
