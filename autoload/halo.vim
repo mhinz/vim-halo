@@ -23,7 +23,7 @@ function! s:process_config(userconfig) abort
   if has_key(a:userconfig, 'hlgroup')
     let s:runconfig.hlgroup = a:userconfig.hlgroup
   endif
-  if has_key(a:userconfig, 'intervals')
+  if has_key(a:userconfig, 'intervals') && !empty(a:userconfig.intervals)
     " We require an odd length for the invervals list. Truncate otherwise.
     let s:runconfig.intervals = len(a:userconfig.intervals) % 2
           \ ? a:userconfig.intervals
