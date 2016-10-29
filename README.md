@@ -3,7 +3,7 @@
 Make the current line blink in a given interval using timers. Idea stolen from
 @[justinmk](https://github.com/justinmk).
 
-Works with Neovim and Vim with the `+timers` feature compiled in. Neovim.
+Works with Neovim and Vim with the `+timers` feature compiled in.
 
 ## To be done
 
