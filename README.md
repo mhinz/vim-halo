@@ -1,6 +1,7 @@
 # vim-halo
 
-Make the current line blink in a given interval using timers.
+Make the current line blink in a given interval using timers. Idea stolen from
+@[justinmk](https://github.com/justinmk).
 
 Works with Neovim and Vim with the `+timers` feature compiled in. Neovim.
 
