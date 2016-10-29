@@ -10,7 +10,8 @@ _Works with Neovim and Vim with the `+timers` feature compiled in._
 
 ## To be done
 
-- [ ] Add more shapes
+- [ ] Add more shapes. Not only highlight the current line but draw rectangles
+  around the cursor and stuff like that. Or a crosshair.
 
 ## Usage
 
