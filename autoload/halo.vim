@@ -4,9 +4,11 @@ if !has('timers')
 endif
 
 " Configuration {{{1
-highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
-autocmd ColorScheme *
-      \ highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+if !hlexists('Halo')
+  highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+  autocmd ColorScheme *
+        \ highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+endif
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',
