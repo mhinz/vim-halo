@@ -4,16 +4,20 @@ if !has('timers')
 endif
 
 " Configuration {{{1
-if !hlexists('Halo')
-  highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
-  autocmd ColorScheme *
-        \ highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
-endif
+call s:setup_colors()
+autocmd ColorScheme * call s:setup_colors()
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',
       \ 'intervals': [100, 100, 100, 100, 100]
       \ }
+
+" s:setup_colors() {{{1
+function! s:setup_colors() abort
+  if !hlexists('Halo')
+    highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+  endif
+endfunction
 
 " s:process_config() {{{1
 function! s:process_config(userconfig) abort
