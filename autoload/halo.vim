@@ -13,7 +13,8 @@ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',
-      \ 'intervals': [100, 100, 100, 100, 100]
+      \ 'intervals': [100, 100, 100, 100, 100],
+      \ 'shape':     'line',
       \ }
 
 " s:process_config() {{{1
@@ -32,11 +33,30 @@ function! s:process_config(userconfig) abort
           \ ? a:userconfig.intervals
           \ : a:userconfig.intervals[:-2]
   endif
+  if has_key(a:userconfig, 'shape')
+    let s:runconfig.shape = a:userconfig.shape
+  endif
+endfunction
+
+" s:get_shape() {{{1
+function! s:get_shape(shape) abort
+  if 0
+  endif
+
+  " Default: line
+  let curcol = col('.')
+  lockmarks keepjumps normal! g0
+  let begin = col('.')
+  lockmarks keepjumps normal! g$
+  let end = col('.')
+  call cursor('.', curcol)
+
+  return [[line('.'), begin, (end - begin) + 1]]
 endfunction
 
 " s:show() {{{1
 function! s:show(_) abort
-  let s:halo_id = matchaddpos(s:runconfig.hlgroup, [line('.')])
+  let s:halo_id = matchaddpos(s:runconfig.hlgroup, s:get_shape(s:runconfig.shape))
   let hide_in_msecs = remove(s:runconfig.intervals, 0)
   return timer_start(hide_in_msecs, function('s:hide'))
 endfunction
