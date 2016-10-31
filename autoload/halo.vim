@@ -3,12 +3,18 @@ if !has('timers')
   finish
 endif
 
-" s:setup_colors() {{{1
-function! s:setup_colors() abort
-  if !hlexists('Halo')
-    highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
-  endif
-endfunction
+augroup halo
+  autocmd!
+  autocmd ColorScheme *
+        \ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+augroup END
+
+highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+
+let s:defaults = {
+      \ 'hlgroup':   'Halo',
+      \ 'intervals': [100, 100, 100, 100, 100]
+      \ }
 
 " s:process_config() {{{1
 function! s:process_config(userconfig) abort
@@ -54,17 +60,5 @@ function! halo#run(...) abort
   call s:show(0)
 endfunction
 " }}}
-
-augroup halo
-  autocmd!
-  autocmd ColorScheme * call s:setup_colors()
-augroup END
-
-call s:setup_colors()
-
-let s:defaults = {
-      \ 'hlgroup':   'Halo',
-      \ 'intervals': [100, 100, 100, 100, 100]
-      \ }
 
 " vim: fdm=marker
