@@ -5,7 +5,11 @@ endif
 
 " Configuration {{{1
 call s:setup_colors()
-autocmd ColorScheme * call s:setup_colors()
+
+augroup halo
+  autocmd!
+  autocmd ColorScheme * call s:setup_colors()
+augroup END
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',
