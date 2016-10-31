@@ -3,19 +3,6 @@ if !has('timers')
   finish
 endif
 
-" Configuration {{{1
-call s:setup_colors()
-
-augroup halo
-  autocmd!
-  autocmd ColorScheme * call s:setup_colors()
-augroup END
-
-let s:defaults = {
-      \ 'hlgroup':   'Halo',
-      \ 'intervals': [100, 100, 100, 100, 100]
-      \ }
-
 " s:setup_colors() {{{1
 function! s:setup_colors() abort
   if !hlexists('Halo')
@@ -66,5 +53,18 @@ function! halo#run(...) abort
   endif
   call s:show(0)
 endfunction
+" }}}
+
+augroup halo
+  autocmd!
+  autocmd ColorScheme * call s:setup_colors()
+augroup END
+
+call s:setup_colors()
+
+let s:defaults = {
+      \ 'hlgroup':   'Halo',
+      \ 'intervals': [100, 100, 100, 100, 100]
+      \ }
 
 " vim: fdm=marker
