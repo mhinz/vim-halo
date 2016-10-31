@@ -11,47 +11,48 @@ function! s:setup_colors() abort
 endfunction
 
 " s:process_config() {{{1
-function! s:process_config(userconfig) abort
-  if type(a:userconfig) isnot type({})
-    redraw
-    echomsg "Try halo#run({'hlgroup': 'Halo', 'intervals': [200, 200, 200] })"
-    return
+function! s:process_config(config) abort
+  let config = deepcopy(s:defaults)
+  if has_key(a:config, 'hlgroup')
+    let config.hlgroup = a:config.hlgroup
   endif
-  if has_key(a:userconfig, 'hlgroup')
-    let s:runconfig.hlgroup = a:userconfig.hlgroup
-  endif
-  if has_key(a:userconfig, 'intervals') && !empty(a:userconfig.intervals)
+  if has_key(a:config, 'intervals') && !empty(a:config.intervals)
     " We require an odd length for the invervals list. Truncate otherwise.
-    let s:runconfig.intervals = len(a:userconfig.intervals) % 2
-          \ ? a:userconfig.intervals
-          \ : a:userconfig.intervals[:-2]
+    let config.intervals = len(a:config.intervals) % 2
+          \ ? a:config.intervals
+          \ : a:config.intervals[:-2]
   endif
+  return config
 endfunction
 
-" s:show() {{{1
-function! s:show(_) abort
-  let s:halo_id = matchaddpos(s:runconfig.hlgroup, [line('.')])
-  let hide_in_msecs = remove(s:runconfig.intervals, 0)
-  return timer_start(hide_in_msecs, function('s:hide'))
-endfunction
+" s:new() {{{1
+function! s:new(config) abort
+  let obj = {}
+  let obj.id = -1
+  let obj.config = s:process_config(a:config)
 
-" s:hide() {{{1
-function! s:hide(_) abort
-  silent! call matchdelete(s:halo_id)
-  if empty(s:runconfig.intervals)
-    return
-  endif
-  let show_in_msecs = remove(s:runconfig.intervals, 0)
-  return timer_start(show_in_msecs, function('s:show'))
+  function! obj.hide(_)
+    silent! call matchdelete(self.id)
+    if empty(self.config.intervals)
+      return
+    endif
+    let show_in_msecs = remove(self.config.intervals, 0)
+    return timer_start(show_in_msecs, self.show)
+  endfunction
+
+  function! obj.show(_)
+    let self.id = matchaddpos(self.config.hlgroup, [line('.')])
+    let hide_in_msecs = remove(self.config.intervals, 0)
+    return timer_start(hide_in_msecs, self.hide)
+  endfunction
+
+  return obj
 endfunction
 
 " halo#run() {{{1
 function! halo#run(...) abort
-  let s:runconfig = deepcopy(s:defaults)
-  if a:0
-    call s:process_config(a:1)
-  endif
-  call s:show(0)
+  let halo = s:new(a:0 && type(a:1) == type({}) ? a:1 : {})
+  return halo.show(0)
 endfunction
 " }}}
 
