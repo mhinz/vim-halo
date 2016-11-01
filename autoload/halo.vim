@@ -38,22 +38,6 @@ function! s:process_config(userconfig) abort
   endif
 endfunction
 
-" s:get_shape() {{{1
-function! s:get_shape(shape) abort
-  if 0
-  endif
-
-  " Default: line
-  let curcol = col('.')
-  lockmarks keepjumps normal! g0
-  let begin = col('.')
-  lockmarks keepjumps normal! g$
-  let end = col('.')
-  call cursor('.', curcol)
-
-  return [[line('.'), begin, (end - begin) + 1]]
-endfunction
-
 " s:show() {{{1
 function! s:show(_) abort
   let s:halo_id = matchaddpos(s:runconfig.hlgroup, s:get_shape(s:runconfig.shape))
@@ -80,5 +64,80 @@ function! halo#run(...) abort
   call s:show(0)
 endfunction
 " }}}
+
+" s:get_shape() {{{1
+function! s:get_shape(shape) abort
+  if a:shape == 'halo1'
+    return s:get_shape_halo1()
+  elseif a:shape == 'halo2'
+    return s:get_shape_halo2()
+  endif
+
+  " Default: line
+  let curcol = col('.')
+  lockmarks keepjumps normal! g0
+  let begin = col('.')
+  lockmarks keepjumps normal! g$
+  let end = col('.')
+  call cursor('.', curcol)
+
+  return [[line('.'), begin, (end - begin) + 1]]
+endfunction
+
+" s:get_shape_halo1 {{{1
+function! s:get_shape_halo1()
+  let line = line('.')
+  let col = col('.')
+  if col == 1
+    return [
+          \ [ line-1, col  , 2 ],
+          \ [ line  , col+1    ],
+          \ [ line+1, col+2    ],
+          \ [ line+1, col  , 2 ],
+          \ ]
+  else
+    return [
+          \ [ line-1, col-1, 3 ],
+          \ [ line  , col-1    ],
+          \ [ line  , col+1    ],
+          \ [ line+1, col-1, 3 ],
+          \ ]
+  endif
+endfunction
+
+" vim: fdm=marker
+" s:get_shape_halo2 {{{1
+function! s:get_shape_halo2()
+  let line = line('.')
+  let col = col('.')
+  if col == 1
+    return [
+          \ [ line-2, col  , 3 ],
+          \ [ line-1, col+2    ],
+          \ [ line  , col+2    ],
+          \ [ line+1, col+2    ],
+          \ [ line+2, col  , 3 ],
+          \ ]
+  elseif col == 2
+    return [
+          \ [ line-2, col-1, 4 ],
+          \ [ line-1, col+2    ],
+          \ [ line  , col+2    ],
+          \ [ line+1, col+2    ],
+          \ [ line+2, col-1, 4 ],
+          \ ]
+  else
+    return [
+          \ [ line-2, col-2, 5 ],
+          \ [ line-1, col-2    ],
+          \ [ line-1, col+2    ],
+          \ [ line  , col-2    ],
+          \ [ line  , col+2    ],
+          \ [ line+1, col-2    ],
+          \ [ line+1, col+2    ],
+          \ [ line+2, col-2, 5 ],
+          \ ]
+  endif
+endfunction
 
 " vim: fdm=marker
