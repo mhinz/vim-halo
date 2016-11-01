@@ -14,7 +14,7 @@ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 let s:defaults = {
       \ 'hlgroup':   'Halo',
       \ 'intervals': [100, 100, 100, 100, 100],
-      \ 'shape':     'line',
+      \ 'shape':     'halo1',
       \ }
 
 " s:process_config() {{{1
@@ -67,13 +67,17 @@ endfunction
 
 " s:get_shape() {{{1
 function! s:get_shape(shape) abort
-  if a:shape == 'halo1'
-    return s:get_shape_halo1()
-  elseif a:shape == 'halo2'
+  if a:shape == 'halo2'
     return s:get_shape_halo2()
+  elseif a:shape == 'line'
+    return s:get_shape_line()
   endif
 
-  " Default: line
+  return s:get_shape_halo1()
+endfunction
+
+" s:get_shape_line {{{1
+function! s:get_shape_line()
   let curcol = col('.')
   lockmarks keepjumps normal! g0
   let begin = col('.')
