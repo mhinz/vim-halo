@@ -62,6 +62,7 @@ function! halo#run(...) abort
     call s:process_config(a:1)
   endif
   call s:show(0)
+  return ''
 endfunction
 " }}}
 
