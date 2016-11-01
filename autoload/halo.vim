@@ -69,6 +69,10 @@ endfunction
 function! s:get_shape(shape) abort
   if a:shape == 'halo2'
     return s:get_shape_halo2()
+  elseif a:shape == 'cross1'
+    return s:get_shape_cross1()
+  elseif a:shape == 'cross2'
+    return s:get_shape_cross2()
   elseif a:shape == 'line'
     return s:get_shape_line()
   endif
@@ -109,7 +113,6 @@ function! s:get_shape_halo1()
   endif
 endfunction
 
-" vim: fdm=marker
 " s:get_shape_halo2 {{{1
 function! s:get_shape_halo2()
   let line = line('.')
@@ -143,5 +146,59 @@ function! s:get_shape_halo2()
           \ ]
   endif
 endfunction
+
+" s:get_shape_cross1 {{{1
+function! s:get_shape_cross1()
+  let line = line('.')
+  let col = col('.')
+  if col == 1
+    return [
+          \ [ line-1, col   ],
+          \ [ line  , col+1 ],
+          \ [ line+1, col   ],
+          \ ]
+  else
+    return [
+          \ [ line-1, col   ],
+          \ [ line  , col-1 ],
+          \ [ line  , col+1 ],
+          \ [ line+1, col   ],
+          \ ]
+  endif
+endfunction
+
+" s:get_shape_cross2 {{{1
+function! s:get_shape_cross2()
+  let line = line('.')
+  let col = col('.')
+  if col == 1
+    return [
+          \ [ line-2, col      ],
+          \ [ line-1, col      ],
+          \ [ line  , col+1, 2 ],
+          \ [ line+1, col      ],
+          \ [ line+2, col      ],
+          \ ]
+  elseif col == 2
+    return [
+          \ [ line-2, col      ],
+          \ [ line-1, col      ],
+          \ [ line  , col-1    ],
+          \ [ line  , col+1, 2 ],
+          \ [ line+1, col      ],
+          \ [ line+2, col      ],
+          \ ]
+  else
+    return [
+          \ [ line-2, col      ],
+          \ [ line-1, col      ],
+          \ [ line  , col-2, 2 ],
+          \ [ line  , col+1, 2 ],
+          \ [ line+1, col      ],
+          \ [ line+2, col      ],
+          \ ]
+  endif
+endfunction
+" }}}
 
 " vim: fdm=marker
