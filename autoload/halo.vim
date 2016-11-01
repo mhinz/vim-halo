@@ -75,6 +75,8 @@ function! s:get_shape(shape) abort
     return s:get_shape_cross2()
   elseif a:shape == 'cross2halo1'
     return s:get_shape_cross2halo1()
+  elseif a:shape == 'rectangle2'
+    return s:get_shape_rectangle2()
   elseif a:shape == 'line'
     return s:get_shape_line()
   endif
@@ -231,6 +233,39 @@ function! s:get_shape_cross2halo1()
           \ [ line  , col+1, 2 ],
           \ [ line+1, col-1, 3 ],
           \ [ line+2, col      ],
+          \ ]
+  endif
+endfunction
+
+" s:get_shape_rectangle2 {{{1
+function! s:get_shape_rectangle2()
+  let line = line('.')
+  let col = col('.')
+  if col == 1
+    return [
+          \ [ line-2, col  , 3 ],
+          \ [ line-1, col  , 3 ],
+          \ [ line  , col+1, 2 ],
+          \ [ line+1, col  , 3 ],
+          \ [ line+2, col  , 3 ],
+          \ ]
+  elseif col == 2
+    return [
+          \ [ line-2, col-1, 4 ],
+          \ [ line-1, col-1, 4 ],
+          \ [ line  , col-1    ],
+          \ [ line  , col+1, 2 ],
+          \ [ line+1, col-1, 4 ],
+          \ [ line+2, col-1, 4 ],
+          \ ]
+  else
+    return [
+          \ [ line-2, col-2, 5 ],
+          \ [ line-1, col-2, 5 ],
+          \ [ line  , col-2, 2 ],
+          \ [ line  , col+1, 2 ],
+          \ [ line+1, col-2, 5 ],
+          \ [ line+2, col-2, 5 ],
           \ ]
   endif
 endfunction
