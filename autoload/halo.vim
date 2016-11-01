@@ -105,7 +105,7 @@ function! s:get_shape_halo1()
     return [
           \ [ line-1, col  , 2 ],
           \ [ line  , col+1    ],
-          \ [ line+1, col+2    ],
+          \ [ line+1, col+1    ],
           \ [ line+1, col  , 2 ],
           \ ]
   else
