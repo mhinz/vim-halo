@@ -32,3 +32,7 @@ The dictionary takes up to 3 keys:
 :call halo#run({'intervals': [100, 300, 600, 300, 100]})
 :call halo#run({'intervals': [200,200,200], 'hlgroup': 'IncSearch'})
 ```
+
+## Disclaimer
+
+Only the `line` shape works works with wrapped lines!
