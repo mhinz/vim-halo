@@ -68,20 +68,9 @@ endfunction
 
 " s:get_shape() {{{1
 function! s:get_shape(shape) abort
-  if a:shape == 'halo2'
-    return s:get_shape_halo2()
-  elseif a:shape == 'cross1'
-    return s:get_shape_cross1()
-  elseif a:shape == 'cross2'
-    return s:get_shape_cross2()
-  elseif a:shape == 'cross2halo1'
-    return s:get_shape_cross2halo1()
-  elseif a:shape == 'rectangle2'
-    return s:get_shape_rectangle2()
-  elseif a:shape == 'line'
-    return s:get_shape_line()
+  if exists('*s:get_shape_'.a:shape)
+    return s:get_shape_{a:shape}()
   endif
-
   return s:get_shape_halo1()
 endfunction
 
