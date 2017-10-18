@@ -7,12 +7,14 @@ augroup halo
   autocmd!
   autocmd ColorScheme *
         \ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+  autocmd CursorMoved,CursorMovedI * call s:stop()
 augroup END
 
 highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',
+      \ 'step':      0,
       \ 'intervals': [100, 100, 100, 100, 100],
       \ 'shape':     'halo1',
       \ }
@@ -38,30 +40,38 @@ function! s:process_config(userconfig) abort
   endif
 endfunction
 
-" s:show() {{{1
-function! s:show(_) abort
-  let s:halo_id = matchaddpos(s:runconfig.hlgroup, s:get_shape(s:runconfig.shape))
-  let hide_in_msecs = remove(s:runconfig.intervals, 0)
-  return timer_start(hide_in_msecs, function('s:hide'))
+" s:stop() {{{1
+function! s:stop() abort
+  if exists('s:runconfig') && has_key(s:runconfig, 'timer')
+    call timer_stop(s:runconfig.timer)
+    unlet! s:runconfig
+  endif
+  silent! call matchdelete(s:halo_id)
 endfunction
 
-" s:hide() {{{1
-function! s:hide(_) abort
-  silent! call matchdelete(s:halo_id)
-  if empty(s:runconfig.intervals)
-    return
+" s:tick() {{{1
+function! s:tick(_) abort
+  if s:runconfig.step >= len(s:runconfig.intervals)
+    return s:stop()
   endif
-  let show_in_msecs = remove(s:runconfig.intervals, 0)
-  return timer_start(show_in_msecs, function('s:show'))
+  let delay = s:runconfig.intervals[s:runconfig.step]
+  if s:runconfig.step % 2 == 0
+    let s:halo_id = matchaddpos(s:runconfig.hlgroup, s:get_shape(s:runconfig.shape))
+  else
+    silent! call matchdelete(s:halo_id)
+  endif
+  let s:runconfig.step += 1
+  let s:runconfig.timer = timer_start(delay, function('s:tick'))
 endfunction
 
 " halo#run() {{{1
 function! halo#run(...) abort
+  call s:stop()
   let s:runconfig = deepcopy(s:defaults)
   if a:0
     call s:process_config(a:1)
   endif
-  call s:show(0)
+  call s:tick(0)
   return ''
 endfunction
 " }}}
