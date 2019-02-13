@@ -1,18 +1,14 @@
 # vim-halo
 
-Make the current line blink in a given interval using timers. The cursor won't
-block.
+Highlight the cursor by putting blinking shapes around it.
 
-This could be used to visually highlight the cursor after jumping to a tag and
-similar situations. Be creative!
-
-_Works with Neovim and Vim with the `+timers` feature compiled in._
-
-Idea stolen from @[justinmk](https://github.com/justinmk).
+By default it puts a halo around the cursor and blinks three times. This can be
+used to quickly find the cursor after switching buffers etc. Moving the cursor
+will stop the blinking immediately.
 
 ## Usage
 
-There's only one function `halo#run()` which takes one optional argument, a
+There is only one function `halo#run()`, which takes one optional argument, a
 dictionary.
 
 The dictionary takes up to 3 keys:
@@ -31,6 +27,28 @@ The dictionary takes up to 3 keys:
 :call halo#run({'shape': 'cross2halo1'})
 :call halo#run({'intervals': [100, 300, 600, 300, 100]})
 :call halo#run({'intervals': [200,200,200], 'hlgroup': 'IncSearch'})
+```
+
+## Examples
+
+Every time you change buffers:
+
+```vim
+autocmd BufEnter * call halo#run()
+```
+
+When navigating the quickfix or location list:
+
+```vim
+nnoremap [q  :cprevious \| call halo#run()<cr>
+nnoremap ]q  :cnext \| call halo#run()<cr>
+nnoremap [Q  :cfirst \| call halo#run()<cr>
+nnoremap ]Q  :clast \| call halo#run()<cr>
+
+nnoremap [l  :lprevious \| call halo#run()<cr>
+nnoremap ]l  :lnext \| call halo#run()<cr>
+nnoremap [L  :lfirst \| call halo#run()<cr>
+nnoremap ]L  :llast \| call halo#run()<cr>
 ```
 
 ## Disclaimer
