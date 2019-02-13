@@ -3,9 +3,10 @@ if !has('timers')
   finish
 endif
 
-augroup halo_colo
+augroup halo
   autocmd!
   autocmd ColorScheme * highlight default link Halo IncSearch
+  autocmd WinLeave    * call s:halo.reset()
 augroup END
 
 highlight default link Halo IncSearch
@@ -53,10 +54,8 @@ endfunction
 
 " s:reset() {{{1
 function! s:reset() dict abort
-  augroup halo
-    autocmd!
-  augroup END
-  let self.ticks = 0
+  let self.ticks = -1
+  call self.clear()
 endfunction
 
 " s:tick() {{{1
@@ -80,11 +79,6 @@ function! halo#run(...) abort
   let s:halo.clear = function('s:clear')
   let s:halo.reset = function('s:reset')
   let s:halo.tick  = function('s:tick')
-  augroup halo
-    autocmd!
-    autocmd CursorMoved,CursorMovedI <buffer>
-          \ if getcurpos() != s:halo.pos | call s:halo.reset() | endif
-  augroup END
   call s:halo.tick(0)
   return ''
 endfunction
