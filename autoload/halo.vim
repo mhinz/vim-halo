@@ -7,71 +7,79 @@ augroup halo
   autocmd!
   autocmd ColorScheme *
         \ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
-  autocmd CursorMoved,CursorMovedI * call s:stop()
+  autocmd CursorMoved,CursorMovedI * call s:halo.reset()
 augroup END
 
 highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',
-      \ 'step':      0,
+      \ 'ticks':     5,
       \ 'intervals': [100, 100, 100, 100, 100],
       \ 'shape':     'halo1',
       \ }
 
 " s:process_config() {{{1
-function! s:process_config(userconfig) abort
-  if type(a:userconfig) isnot type({})
+function! s:process_config(config) abort
+  let config = deepcopy(s:defaults)
+  if type(a:config) isnot type({})
     redraw
     echomsg "Try halo#run({'hlgroup': 'Halo', 'intervals': [200, 200, 200] })"
-    return
+    return config
   endif
-  if has_key(a:userconfig, 'hlgroup')
-    let s:runconfig.hlgroup = a:userconfig.hlgroup
+  if has_key(a:config, 'hlgroup')
+    let config.hlgroup = a:config.hlgroup
   endif
-  if has_key(a:userconfig, 'intervals') && !empty(a:userconfig.intervals)
+  if has_key(a:config, 'intervals') && !empty(a:config.intervals)
     " We require an odd length for the invervals list. Truncate otherwise.
-    let s:runconfig.intervals = len(a:userconfig.intervals) % 2
-          \ ? a:userconfig.intervals
-          \ : a:userconfig.intervals[:-2]
+    let config.intervals = len(a:config.intervals) % 2
+          \ ? a:config.intervals
+          \ : a:config.intervals[:-2]
+    let config.intervals = reverse(config.intervals)
+    let config.ticks = len(config.intervals)
   endif
-  if has_key(a:userconfig, 'shape')
-    let s:runconfig.shape = a:userconfig.shape
+  if has_key(a:config, 'shape')
+    let config.shape = a:config.shape
+  endif
+  return config
+endfunction
+
+" s:clear() {{{1
+function! s:clear() dict abort
+  if exists('s:halo_id')
+    call matchdelete(s:halo_id)
+    unlet s:halo_id
+    return 1
   endif
 endfunction
 
-" s:stop() {{{1
-function! s:stop() abort
-  if exists('s:runconfig') && has_key(s:runconfig, 'timer')
-    call timer_stop(s:runconfig.timer)
-    unlet! s:runconfig
-  endif
-  silent! call matchdelete(s:halo_id)
+function! s:reset() dict abort
+  let self.ticks = 0
 endfunction
 
 " s:tick() {{{1
-function! s:tick(_) abort
-  if s:runconfig.step >= len(s:runconfig.intervals)
-    return s:stop()
+function! s:tick(_) dict abort
+  let self.ticks -= 1
+  let active = self.ticks >= 0
+
+  if !self.clear() && active
+    let s:halo_id = matchaddpos(self.hlgroup, s:get_shape(self.shape))
   endif
-  let delay = s:runconfig.intervals[s:runconfig.step]
-  if s:runconfig.step % 2 == 0
-    let s:halo_id = matchaddpos(s:runconfig.hlgroup, s:get_shape(s:runconfig.shape))
-  else
-    silent! call matchdelete(s:halo_id)
+
+  if active
+    let delay = self.intervals[self.ticks]
+    call timer_start(delay, self.tick)
   endif
-  let s:runconfig.step += 1
-  let s:runconfig.timer = timer_start(delay, function('s:tick'))
 endfunction
 
 " halo#run() {{{1
 function! halo#run(...) abort
-  call s:stop()
-  let s:runconfig = deepcopy(s:defaults)
-  if a:0
-    call s:process_config(a:1)
-  endif
-  call s:tick(0)
+  let s:halo = s:process_config(a:0 ? a:1 : {})
+  let s:halo.clear = function('s:clear')
+  let s:halo.reset = function('s:reset')
+  let s:halo.tick  = function('s:tick')
+  call s:halo.clear()
+  call s:halo.tick(0)
   return ''
 endfunction
 " }}}
