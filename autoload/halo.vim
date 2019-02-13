@@ -3,11 +3,10 @@ if !has('timers')
   finish
 endif
 
-augroup halo
+augroup halo_colo
   autocmd!
   autocmd ColorScheme *
         \ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
-  autocmd CursorMoved,CursorMovedI * call s:halo.reset()
 augroup END
 
 highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
@@ -46,14 +45,18 @@ endfunction
 
 " s:clear() {{{1
 function! s:clear() dict abort
-  if exists('s:halo_id')
-    call matchdelete(s:halo_id)
-    unlet s:halo_id
+  if exists('self.id')
+    call matchdelete(self.id)
+    unlet self.id
     return 1
   endif
 endfunction
 
+" s:reset() {{{1
 function! s:reset() dict abort
+  augroup halo
+    autocmd!
+  augroup END
   let self.ticks = 0
 endfunction
 
@@ -61,24 +64,28 @@ endfunction
 function! s:tick(_) dict abort
   let self.ticks -= 1
   let active = self.ticks >= 0
-
   if !self.clear() && active
-    let s:halo_id = matchaddpos(self.hlgroup, s:get_shape(self.shape))
+    let self.id = matchaddpos(self.hlgroup, s:get_shape(self.shape))
   endif
-
   if active
-    let delay = self.intervals[self.ticks]
-    call timer_start(delay, self.tick)
+    call timer_start(self.intervals[self.ticks], self.tick)
+  else
+    call self.reset()
   endif
 endfunction
 
 " halo#run() {{{1
 function! halo#run(...) abort
-  let s:halo = s:process_config(a:0 ? a:1 : {})
+  let s:halo       = s:process_config(a:0 ? a:1 : {})
+  let s:halo.pos   = getcurpos()
   let s:halo.clear = function('s:clear')
   let s:halo.reset = function('s:reset')
   let s:halo.tick  = function('s:tick')
-  call s:halo.clear()
+  augroup halo
+    autocmd!
+    autocmd CursorMoved,CursorMovedI <buffer>
+          \ if getcurpos() != s:halo.pos | call s:halo.reset() | endif
+  augroup END
   call s:halo.tick(0)
   return ''
 endfunction
