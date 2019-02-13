@@ -5,11 +5,10 @@ endif
 
 augroup halo_colo
   autocmd!
-  autocmd ColorScheme *
-        \ highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+  autocmd ColorScheme * highlight default link Halo IncSearch
 augroup END
 
-highlight default Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
+highlight default link Halo IncSearch
 
 let s:defaults = {
       \ 'hlgroup':   'Halo',

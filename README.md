@@ -2,7 +2,7 @@
 
 Highlight the cursor by putting blinking shapes around it.
 
-By default it puts a halo around the cursor and blinks three times. This can be
+By default, the shape is a halo and the cursor blinks three times. This can be
 used to quickly find the cursor after switching buffers etc. Moving the cursor
 will stop the blinking immediately.
 
@@ -13,8 +13,8 @@ dictionary.
 
 The dictionary takes up to 3 keys:
 
-- **hlgroup**: Highlight group as *string*. Default is `Halo` which is provided
-  by the plugin itself.
+- **hlgroup**: Highlight group as *string*. Default is `Halo` which links to
+  `IncSearch`.
 - **shape**: Shape as a *string*. Can by any of `halo1`, `halo2`, `cross1`,
   `cross2`, `cross2halo1`, `rectangle2`, or `line`. Default is `halo1`.
 - **intervals**: A *list of numbers*. Calling `halo#run()` immediately shows a
@@ -49,6 +49,18 @@ nnoremap [l  :lprevious \| call halo#run()<cr>
 nnoremap ]l  :lnext \| call halo#run()<cr>
 nnoremap [L  :lfirst \| call halo#run()<cr>
 nnoremap ]L  :llast \| call halo#run()<cr>
+```
+
+Use colors from another highlight group:
+
+```vim
+highlight link Halo Search
+```
+
+Or define your own colors:
+
+```vim
+highlight Halo guifg=white guibg=#F92672 ctermfg=white ctermbg=197
 ```
 
 ## Disclaimer
