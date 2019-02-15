@@ -6,7 +6,7 @@ endif
 augroup halo
   autocmd!
   autocmd ColorScheme * highlight default link Halo IncSearch
-  autocmd WinLeave    * call s:halo.reset()
+  autocmd WinLeave    * call halo#reset()
 augroup END
 
 highlight default link Halo IncSearch
@@ -74,6 +74,7 @@ endfunction
 
 " halo#run() {{{1
 function! halo#run(...) abort
+  call halo#reset()
   let s:halo       = s:process_config(a:0 ? a:1 : {})
   let s:halo.pos   = getcurpos()
   let s:halo.clear = function('s:clear')
@@ -81,6 +82,13 @@ function! halo#run(...) abort
   let s:halo.tick  = function('s:tick')
   call s:halo.tick(0)
   return ''
+endfunction
+
+" halo#reset() {{{1
+function! halo#reset() abort
+  if exists('s:halo')
+    call s:halo.reset()
+  endif
 endfunction
 " }}}
 
