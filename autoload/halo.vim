@@ -45,9 +45,9 @@ endfunction
 
 " s:clear() {{{1
 function! s:clear() dict abort
-  if exists('self.id')
-    call matchdelete(self.id)
-    unlet self.id
+  if exists('w:halo_id')
+    call matchdelete(w:halo_id)
+    unlet w:halo_id
     return 1
   endif
 endfunction
@@ -63,7 +63,7 @@ function! s:tick(_) dict abort
   let self.ticks -= 1
   let active = self.ticks >= 0
   if !self.clear() && active
-    let self.id = matchaddpos(self.hlgroup, s:get_shape(self.shape))
+    let w:halo_id = matchaddpos(self.hlgroup, s:get_shape(self.shape))
   endif
   if active
     call timer_start(self.intervals[self.ticks], self.tick)
