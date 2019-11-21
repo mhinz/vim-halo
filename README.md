@@ -6,6 +6,8 @@ By default, the shape is a halo and the cursor blinks three times. This can be
 used to quickly find the cursor after switching buffers etc. Moving the cursor
 will stop the blinking immediately.
 
+![vim-halo in action](https://raw.githubusercontent.com/mhinz/vim-halo/master/demo.gif)
+
 ## Usage
 
 There is only one function `halo#run()`, which takes one optional argument, a
