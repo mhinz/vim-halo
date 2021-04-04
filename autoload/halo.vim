@@ -46,7 +46,7 @@ endfunction
 " s:clear() {{{1
 function! s:clear() dict abort
   if exists('w:halo_id')
-    call matchdelete(w:halo_id)
+    silent! call matchdelete(w:halo_id)
     unlet w:halo_id
     return 1
   endif
